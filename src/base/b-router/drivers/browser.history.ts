@@ -28,7 +28,8 @@ type HistoryLog = Array<{
 
 const
 	historyLog = <HistoryLog>[],
-	historyStorage = session.namespace('[[BROWSER_HISTORY]]');
+	historyStorage = session.namespace('[[BROWSER_HISTORY]]'),
+	hasNativeHistory = /\[native code]/.test(history.pushState.toString());
 
 function truncateHistoryLog(): void {
 	if (historyLog.length <= history.length) {
@@ -84,8 +85,8 @@ export default function createRouter(ctx: bRouter): Router {
 				syncMethod = method;
 
 			if (info) {
-				if (!info._id) {
-					info._id = Math.random().toString().slice(2);
+				if (!info.id) {
+					info.id = Math.random().toString().slice(2);
 				}
 
 				if (method !== 'replaceState') {
@@ -95,8 +96,8 @@ export default function createRouter(ctx: bRouter): Router {
 					historyInit = true;
 
 					if (historyLog.length && !Object.fastCompare(
-						Object.reject(historyLog[historyLog.length - 1].info, '_id'),
-						Object.reject(info, '_id')
+						Object.reject(historyLog[historyLog.length - 1].info, 'id'),
+						Object.reject(info, 'id')
 					)) {
 						syncMethod = 'pushState';
 					}
@@ -323,14 +324,18 @@ export default function createRouter(ctx: bRouter): Router {
 	});
 
 	$a.on(window, 'popstate', async () => {
+		if (!hasNativeHistory) {
+			window.location.href = location.href;
+		}
+
 		truncateHistoryLog();
 
 		const
-			{_id} = history.state || {_id: undefined};
+			{id} = history.state || {id: undefined};
 
-		if (_id) {
+		if (id) {
 			for (let i = 0; i < historyLog.length; i++) {
-				if (historyLog[i].info._id === _id) {
+				if (historyLog[i].info.id === id) {
 					historyPos = i;
 					saveHistoryPos();
 					break;
