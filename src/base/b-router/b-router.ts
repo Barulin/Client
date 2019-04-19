@@ -733,10 +733,14 @@ export default class bRouter<T extends Dictionary = Dictionary> extends iData<T>
 				}
 
 				this.emit('softChange', store);
+				console.log('Soft change', store);
 
 			} else {
+				console.log('Before route setting', store);
 				hardChange = true;
 				this.emit('hardChange', store);
+
+				console.log('Set route', store);
 				r.route = store;
 			}
 
