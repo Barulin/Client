@@ -549,7 +549,7 @@ export default class bRouter<T extends Dictionary = Dictionary> extends iData<T>
 		let
 			info;
 
-		console.log('Check page', page);
+		console.log('Check page', page, currentPage);
 
 		if (page) {
 			info = this.getPageOpts(engine.id(page));
@@ -560,6 +560,7 @@ export default class bRouter<T extends Dictionary = Dictionary> extends iData<T>
 			const
 				p = this.getPageOpts(page);
 
+			console.log('Page opts', p, page);
 			if (p) {
 				info = Object.mixin(true, p, rejectSystemOpts(currentPage));
 			}
@@ -585,7 +586,7 @@ export default class bRouter<T extends Dictionary = Dictionary> extends iData<T>
 			}
 		}
 
-		console.log('Before checking info');
+		console.log('Before checking info', page, info);
 
 		if (!info) {
 			if (method !== 'event' && page != null) {
@@ -602,7 +603,7 @@ export default class bRouter<T extends Dictionary = Dictionary> extends iData<T>
 		const
 			current = this.getField<CurrentPage>('pageStore');
 
-		console.log('After current setting');
+		console.log('After current setting', current);
 		{
 			const normalize = (val) => Object.mixin(true, val && rejectSystemOpts(val), {
 				query: {},
@@ -682,7 +683,7 @@ export default class bRouter<T extends Dictionary = Dictionary> extends iData<T>
 			r.emit('transition', store, hardChange ? 'hard' : 'soft');
 		};
 
-		console.log('Comparing', !Object.fastCompare(getPlainWatchOpts(current), getPlainWatchOpts(store)));
+		console.log('Comparing', current, store, !Object.fastCompare(getPlainWatchOpts(current), getPlainWatchOpts(store)));
 
 		if (!Object.fastCompare(getPlainWatchOpts(current), getPlainWatchOpts(store))) {
 			this.setField('pageStore', store);
@@ -706,6 +707,8 @@ export default class bRouter<T extends Dictionary = Dictionary> extends iData<T>
 				location.replace(info.toPath(info.params) || '/');
 				return;
 			}
+
+			console.log('Engine method', plainInfo);
 
 			await engine[method](
 				info.toPath(info.params),
