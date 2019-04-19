@@ -28,7 +28,8 @@ type HistoryLog = Array<{
 
 const
 	historyLog = <HistoryLog>[],
-	historyStorage = session.namespace('[[BROWSER_HISTORY]]');
+	historyStorage = session.namespace('[[BROWSER_HISTORY]]'),
+	hasNativeHistory = /\[native code]/.test(history.pushState.toString());
 
 function truncateHistoryLog(): void {
 	if (historyLog.length <= history.length) {
@@ -180,12 +181,13 @@ export default function createRouter(ctx: bRouter): Router {
 	const router = Object.mixin({withAccessors: true}, Object.create(new EventEmitter()), {
 		get page(): CanUndef<CurrentPage> {
 			const
-				url = this.id(location.href);
+				url = this.id(location.href),
+				currentState = hasNativeHistory ? history.state : {};
 
 			return {
 				page: url,
 				query: Object.fromQueryString(location.search, {deep: true}),
-				...history.state,
+				...currentState,
 				url
 			};
 		},
