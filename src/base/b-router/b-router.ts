@@ -740,7 +740,13 @@ export default class bRouter<T extends Dictionary = Dictionary> extends iData<T>
 				r.route = store;
 			}
 
-			emitTransition();
+			try {
+				console.log('Try to transition');
+				emitTransition();
+
+			} catch (e) {
+				console.log('After hard change error', e);
+			}
 
 		} else if (method === 'push') {
 			emitTransition();
