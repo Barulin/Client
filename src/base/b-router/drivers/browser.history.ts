@@ -182,7 +182,9 @@ export default function createRouter(ctx: bRouter): Router {
 		get page(): CanUndef<CurrentPage> {
 			const
 				url = this.id(location.href),
-				currentState = hasNativeHistory ? history.state : historyLog[historyLog.length - 1];
+				currentState = hasNativeHistory ? history.state : historyLog[historyStorage.get('pos')];
+
+			alert(currentState && JSON.stringify(currentState));
 
 			if (!hasNativeHistory && currentState) {
 				currentState.page = currentState.info.page;
