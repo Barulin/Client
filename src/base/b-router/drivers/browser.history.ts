@@ -184,14 +184,14 @@ export default function createRouter(ctx: bRouter): Router {
 				url = this.id(location.href),
 				currentState = hasNativeHistory ? history.state : historyLog[historyLog.length - 1];
 
-			if (!hasNativeHistory) {
+			if (!hasNativeHistory && currentState) {
 				currentState.page = currentState.info.page;
 			}
 
 			return {
 				page: url,
 				query: Object.fromQueryString(location.search, {deep: true}),
-				...currentState,
+				...(currentState || {}),
 				url
 			};
 		},
