@@ -184,7 +184,7 @@ export default function createRouter(ctx: bRouter): Router {
 				url = this.id(location.href),
 				currentState = hasNativeHistory ? history.state : historyLog[historyStorage.get('pos')];
 
-			alert(currentState && JSON.stringify(currentState));
+			console.log('Engine current state', currentState);
 
 			if (!hasNativeHistory && currentState) {
 				currentState.page = currentState.info.page;
