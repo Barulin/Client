@@ -181,10 +181,10 @@ export default function createRouter(ctx: bRouter): Router {
 	const router = Object.mixin({withAccessors: true}, Object.create(new EventEmitter()), {
 		get page(): CanUndef<CurrentPage> {
 			const
-				url = this.id(location.href),
-				currentState = hasNativeHistory ? history.state : historyLog[historyStorage.get('pos')];
+				currentState = hasNativeHistory ? history.state : historyLog[historyStorage.get('pos')],
+				url = hasNativeHistory ? this.id(location.href) : currentState.info.url;
 
-			console.log('Engine current state', currentState);
+			console.log('Engine current state', currentState, url, this.id(location.href));
 
 			if (!hasNativeHistory && currentState) {
 				currentState.page = currentState.info.page;
