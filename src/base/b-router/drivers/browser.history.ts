@@ -145,7 +145,10 @@ export default function createRouter(ctx: bRouter): Router {
 					}
 				}
 
-				if (location.href !== page) {
+				const
+					originPage = location.pathname + location.search + location.hash;
+
+				if (location.href !== page && originPage !== page) {
 					info.url = page;
 					history[method](info, info.page, page);
 					historyStorage.set('lastState', lastState = info);
@@ -191,7 +194,7 @@ export default function createRouter(ctx: bRouter): Router {
 			return {
 				page: url,
 				query: Object.fromQueryString(location.search, {deep: true}),
-				...hasNativeHistory ? history.state : lastState,
+				...history.state,
 				url
 			};
 		},
