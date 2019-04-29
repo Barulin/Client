@@ -22,8 +22,7 @@ const
 
 let
 	historyPos = 0,
-	historyInit = false,
-	lastState;
+	historyInit = false;
 
 type HistoryLog = Array<{
 	page: string;
@@ -63,7 +62,6 @@ function saveHistoryPos(): void {
 // Try to load history log from the session storage
 try {
 	historyPos = historyStorage.get('pos') || 0;
-	lastState = historyStorage.get('lastState');
 
 	for (let o = <HistoryLog>historyStorage.get('log'), i = 0; i < o.length; i++) {
 		historyLog.push(o[i]);
@@ -148,10 +146,13 @@ export default function createRouter(ctx: bRouter): Router {
 				const
 					originPage = location.pathname + location.search + location.hash;
 
-				if (location.href !== page && originPage !== page) {
+				if (
+					hasNativeHistory ?
+						!Object.fastCompare(history.state, info) :
+						location.href !== page && originPage !== page
+				) {
 					info.url = page;
 					history[method](info, info.page, page);
-					historyStorage.set('lastState', lastState = info);
 				}
 
 				if (info.page) {
