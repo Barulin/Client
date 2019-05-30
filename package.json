@@ -27,7 +27,7 @@
   "dependencies": {
     "@types/socket.io": "^1.4.40",
     "@types/socket.io-client": "^1.4.32",
-    "@v4fire/core": "^2.0.0-beta.57",
+    "@v4fire/core": "git+ssh://git@github.com/V4Fire/Core.git#log-flows",
     "babel-polyfill": "^6.26.0",
     "collection.js": "^6.7.4",
     "escaper": "^2.4.34",
